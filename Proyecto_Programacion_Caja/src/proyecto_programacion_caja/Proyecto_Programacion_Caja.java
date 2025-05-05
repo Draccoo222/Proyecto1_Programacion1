@@ -43,7 +43,7 @@ public class Proyecto_Programacion_Caja {
                     System.out.println("Bienvenido a ventas\nIntroduzca su tipo de cliente");
                     System.out.println("1. Para A\n2. Para B\n3. Para C");
                     tipoCliente = entrada.nextInt();
-                      if(tipoCliente != 1 || tipoCliente != 2 || tipoCliente != 3){
+                      if(tipoCliente != 1 && tipoCliente != 2 && tipoCliente != 3){
                         System.out.println("ERROR, introduzca un codigo valido");
                         break;
                     
