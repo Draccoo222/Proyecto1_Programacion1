@@ -12,31 +12,33 @@ public class Proyecto_Programacion_Caja {
     public static void main(String[] args) {
         Scanner entrada = new Scanner(System.in);
         int opcion = 0, tipoCliente, codigo_P,rep;
-        double precio = 0, presupuesto = 0, caja, subtotal = 0;
-        double totPrecVen = 0;
+        double presupuesto = 0, caja;
+        double precio = 0, totPrecVen = 0, subtotal = 0;
         double cant, cantAzucar = 0, cantTrigo = 0, cantMaiz = 0, cantAvena = 0;
         double stockAzucar = 0, stockTrigo = 0, stockMaiz = 0, stockAvena = 0;
-        double mayorGanancia = 0, volVentas = 0 , volCompras = 0, mayorGasto = 0;
-        int cantVent = 0  ,permiso = 0;;
+        double mayorGanancia = 0, volVentas = 0, volCompras = 0, mayorGasto = 0, medioCompras = 0, medioVentas = 0;
+        int cantVent = 0, cantCompras = 0, permiso = 0;;
         
         
         while(opcion != 6){
-            System.out.println("Bienvenido a Caja del Megasuper Sami's");
-            System.out.println("--------------------------------------");        
+            System.out.println("======Bienvenido a Caja del Megasuper Sami's======");
             System.out.println("1. Para abrir Caja\n2. Para Ventas\n3. Para Compras\n4. Reportes\n5. Cierre de CAJA\n6. Salir del Sistema");
-            System.out.println("--------------------------------------");
-            System.out.print("Introduzca un numero para la opcion que desea usar:");
+            System.out.println("==================================================");
+            System.out.print("Introduzca un numero para la opcion que desea usar: ");
             opcion = entrada.nextInt();
+            System.out.println("==================================================");
             switch(opcion){     
                 case 1: //Caja
-                    System.out.println("Ha abierto caja!\nCuanto desea depositar?");
-                    caja = entrada.nextFloat();
+                    System.out.println("Ha abierto caja! Cuanto desea depositar?");
+                    System.out.print("Introduzca cantidad que quiere depositar: ");
+                    caja = entrada.nextDouble();
                     presupuesto += caja;
                     System.out.println("Caja abierta con: Lps. " + String.format("%.2f", presupuesto));
                     break;
                 case 2: //Venta
                     String prodVen = "";
                     String nombre = "";
+                    subtotal = 0;
                     double kg = 0;
                     if(presupuesto <= 0){
                         System.out.println("\n*******ERROR, Primero debe abrir la caja.*******\n");
@@ -68,8 +70,7 @@ public class Proyecto_Programacion_Caja {
                         }
                     }
                     do{
-                        permiso = 0;
-                        subtotal = 0;
+                        permiso = 0;              
                         System.out.println("Introduzca el codigo del producto\n1.Azucar\n2.Avena\n3.Trigo\n4.Maiz");
                         codigo_P = entrada.nextInt();
                         
@@ -104,7 +105,7 @@ public class Proyecto_Programacion_Caja {
                             double tot = precio*kg;
                             subtotal += tot;
                             totPrecVen += precio;
-                            cantVent++;
+                            
                             
                             switch(codigo_P){
                                 case 1: cantAzucar += kg; stockAzucar -= kg; break;
@@ -122,30 +123,32 @@ public class Proyecto_Programacion_Caja {
                                 break;  
                              }  
                         }
+                        prodVen += ", " + nombre + " " + kg + "kg";
                         System.out.println("Desea agregar otro producto?\n0-No\n1-Si");
                         rep = entrada.nextInt();
                     } while(rep == 1);
                     
                         if(permiso ==1){
-                        prodVen += ", " + nombre + " " + kg + "kg";
                         double descuento = 0;
                         double impuesto = subtotal * 0.07;
                         if(subtotal >= 5000) descuento = subtotal * 0.10;
                         else if(subtotal >= 1000) descuento = subtotal * 0.05; 
                         double totpagar = subtotal + impuesto - descuento;
                         
-                        System.out.println("------------------------------------------FACTURA------------------------------------------");
-                        System.out.println("Producto(s) Vendido(s) + Cantidad: " + prodVen.substring(2, prodVen.length()));
-                        System.out.println("Subtotal: Lps." + String.format("%.2f", subtotal));
-                        System.out.println("Impuesto: Lps." + String.format("%.2f", impuesto));
-                        System.out.println("Descuento: Lps." + String.format("%.2f", descuento));
-                        System.out.println("Total a Pagar: Lps." + String.format("%.2f", totpagar));
-                        System.out.println("-------------------------------------------------------------------------------------------\n");
+                        System.out.println("*************************************FACTURA*************************************");
+                        System.out.println(String.format("%-25s Lps. %.2f", "Producto(s) Vendido(s) y Cantidad:", prodVen.substring(2, prodVen.length())));
+                        System.out.println(String.format("%-25s Lps. %.2f", "Subtotal:", subtotal));
+                        System.out.println(String.format("%-25s Lps. %.2f", "Impuesto (7%):", impuesto));
+                        System.out.println(String.format("%-25s Lps. %.2f", "Descuento:", descuento));
+                        System.out.println(String.format("%-25s Lps. %.2f", "Total a pagar:", totpagar));
+                        System.out.println("*********************************************************************************\n");
                         
                         presupuesto += totpagar;
                         volVentas += totpagar;
+                        medioVentas += totpagar;
                         permiso = 0;
                         nombre = "";
+                        cantVent++;
                         double ganancia = subtotal - descuento;
                         if(ganancia > mayorGanancia) mayorGanancia = ganancia;
                         }
@@ -211,8 +214,9 @@ public class Proyecto_Programacion_Caja {
                         if(permiso == 1){
                             System.out.print("Introduzca cuanto quiere comprar del producto (en kilogramos):");
                             kg = entrada.nextInt();
-                            subtotal = precio*kg;
+                            subtotal = precio*kg;                           
                             if(presupuesto>= subtotal){
+                                cantCompras++;
                                 double total = presupuesto - subtotal;    
                                 switch(codigo_P){
                                     case 1:
@@ -232,6 +236,7 @@ public class Proyecto_Programacion_Caja {
 
                                 presupuesto -= subtotal;
                                 volCompras += subtotal;
+                                medioCompras += subtotal;
                                 System.out.println("Presupuesto final: " + presupuesto);
                                 
                                 if(subtotal > mayorGasto) mayorGasto = subtotal;
@@ -243,12 +248,53 @@ public class Proyecto_Programacion_Caja {
                         }
                         else{
                             System.out.println("Proveedor no cuenta con dicho producto");
-
                         }
                     }
                     break;
                 case 4: //Reportes
-
+                    System.out.println("Cantidad en la caja: " + String.format("%.2f", presupuesto) + "Lps.");
+                    System.out.println("Numero de Compras: " + cantCompras);
+                    System.out.println("Numero de Ventas : " + cantVent);
+                    
+                    medioCompras = medioCompras/cantCompras;
+                    medioVentas =  medioVentas/cantVent;
+                   
+                    System.out.println("Valor Medio de Ventas: " + String.format("%.2f", medioVentas) + "Lps.");
+                    System.out.println("Valor Medio de Compras: " + String.format("%.2f", medioCompras) + "Lps.");
+                    
+                    double margenGan = volVentas - volCompras;
+                    System.out.println("Margen de Ganancia Neta: " + String.format("%.2f", margenGan) + "Lps.");
+                    System.out.println("Volumen de Compras: " + String.format("%.2f", volCompras) + "Lps." );       
+                    System.out.println("Volumen de Ventas: " +  String.format("%.2f", volVentas) + "Lps." );
+                    
+                    System.out.println("Venta con Mayor Ganancia: " + String.format("%.2f", mayorGanancia) + "Lps.");
+                    System.out.println("Compra con Mayor Gasto: " + String.format("%.2f", mayorGasto) + "Lps.");
+                    
+                    //Calculo del producto estrella
+                    double mayorCant = 0;
+                    String prodGanadores = "";
+                    if(cantAzucar > mayorCant && cantAzucar == mayorCant){
+                        mayorCant = cantAzucar;
+                        prodGanadores += "Azucar" + ", ";
+                    }
+                    if(cantAvena > mayorCant && cantAvena == mayorCant){
+                        mayorCant = cantAvena;
+                        prodGanadores += "Avena" + ", ";
+                    }
+                    if(cantTrigo > mayorCant && cantTrigo == mayorCant){
+                        mayorCant = cantTrigo;
+                        prodGanadores += "Trigo" + ", ";
+                    }
+                    if(cantMaiz  > mayorCant && cantMaiz == mayorCant){
+                        mayorCant = cantMaiz;
+                        prodGanadores += "Maiz" + ", ";
+                    }
+                    if (mayorCant == 0) {
+                       System.out.println("Producto(s) Estrella: " + prodGanadores);
+                    }
+                    else{
+                    System.out.println("Producto(s) Estrella: " + prodGanadores.substring(0, prodGanadores.length() - 2));}
+                    break;
                 case 5: //Cierrie de CAJA
 
                 case 6: //Salir del Sistema
