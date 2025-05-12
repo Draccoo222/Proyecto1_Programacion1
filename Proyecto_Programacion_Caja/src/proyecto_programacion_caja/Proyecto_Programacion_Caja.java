@@ -136,7 +136,7 @@ public class Proyecto_Programacion_Caja {
                         double totpagar = subtotal + impuesto - descuento;
                         
                         System.out.println("*************************************FACTURA*************************************");
-                        System.out.println(String.format("%-25s Lps. %.2f", "Producto(s) Vendido(s) y Cantidad:", prodVen.substring(2, prodVen.length())));
+                        System.out.println("Producto(s) Vendido(s) y Cantidad:        " + prodVen.substring(2, prodVen.length()));
                         System.out.println(String.format("%-25s Lps. %.2f", "Subtotal:", subtotal));
                         System.out.println(String.format("%-25s Lps. %.2f", "Impuesto (7%):", impuesto));
                         System.out.println(String.format("%-25s Lps. %.2f", "Descuento:", descuento));
