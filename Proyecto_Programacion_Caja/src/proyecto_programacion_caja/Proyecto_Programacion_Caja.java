@@ -24,7 +24,7 @@ public class Proyecto_Programacion_Caja{
         double mayorGanancia = 0, volVentas = 0, volCompras = 0, mayorGasto = 0, medioCompras = 0, medioVentas = 0;
         boolean cajaAbierta = false, cajaCerrada = false;
 
-        while (opcion != 6) {
+        while (opcion != 6 || !cajaCerrada) {
             System.out.println("\n======Bienvenido a Caja del Megasuper Sami's======");
             System.out.println("1. Para abrir Caja\n2. Para Ventas\n3. Para Compras\n4. Reportes\n5. Cierre de CAJA\n6. Salir del Sistema");
             System.out.println("==================================================");
@@ -33,9 +33,14 @@ public class Proyecto_Programacion_Caja{
                 opcion = entrada.nextInt();
                 switch (opcion) {
                     case 1: //Caja
-                        System.out.println("--------- ABRIR CAJA ---------");
-                        System.out.print("Introduzca cantidad que quiere depositar: ");
-                        caja = entrada.nextDouble();
+                        System.out.println("\n--------- ABRIR CAJA ---------");
+                        if(cajaCerrada && cajaAbierta == false){
+                            System.out.println("Caja abierta con: Lps. " + String.format("%.2f", presupuesto));
+                            cajaAbierta = true;
+                        }else if (cajaCerrada && cajaAbierta == true)
+                        {
+                            System.out.print("Introduzca la cantidad que quiere almacenar en caja: ");
+                            caja = entrada.nextDouble();
                         if (caja >= 0) {
                             presupuesto += caja;
                             System.out.println("Caja abierta con: Lps. " + String.format("%.2f", presupuesto));
@@ -43,7 +48,20 @@ public class Proyecto_Programacion_Caja{
                         } else {
                             System.out.println("\n******Porfavor, solamente puede agregar numeros mayores a 0******\n");
                             Thread.sleep(2000);
-                        }
+                         }
+                        }else if (!cajaCerrada && cajaAbierta == false){
+                            System.out.print("Introduzca la cantidad que quiere almacenar en caja: ");
+                            caja = entrada.nextDouble();
+                         if (caja >= 0) 
+                         {
+                             presupuesto += caja;
+                             System.out.println("Caja abierta con: Lps. " + String.format("%.2f", presupuesto));
+                             cajaAbierta = true;
+                         } else {
+                             System.out.println("\n******Porfavor, solamente puede agregar numeros mayores a 0******\n");
+                             Thread.sleep(2000);
+                          }
+                        }                 
                         break;
                     case 2: //Venta
                         String prodVen = "";
@@ -179,14 +197,16 @@ public class Proyecto_Programacion_Caja{
                                     descuento = subtotal * 0.05;
                                 }
                                 double totpagar = subtotal + impuesto - descuento;
-
-                                System.out.println("\n*************************************FACTURA*************************************");
-                                System.out.println(String.format("%-50s", prodVen.substring(2, prodVen.length()), "Producto(s) Vendido(s) y Cantidad:"));
-                                System.out.println(String.format("%-50s Lps. %.2f", "Subtotal:", subtotal));
-                                System.out.println(String.format("%-50s Lps. %.2f", "Impuesto (7%):", impuesto));
-                                System.out.println(String.format("%-50s Lps. %.2f", "Descuento:", descuento));
-                                System.out.println(String.format("%-50s Lps. %.2f", "Total a pagar:", totpagar));
-                                System.out.println("*********************************************************************************\n");
+                                
+                                if (!prodVen.equals("")) {
+                                    System.out.println("\n*************************************FACTURA*************************************");
+                                    System.out.println("Producto(s) Vendido(s) y Cantidad:" + prodVen.substring(2, prodVen.length()));
+                                    System.out.println(String.format("%-50s Lps. %.2f", "Subtotal:", subtotal));
+                                    System.out.println(String.format("%-50s Lps. %.2f", "Impuesto (7%):", impuesto));
+                                    System.out.println(String.format("%-50s Lps. %.2f", "Descuento:", descuento));
+                                    System.out.println(String.format("%-50s Lps. %.2f", "Total a pagar:", totpagar));
+                                    System.out.println("*********************************************************************************\n");
+                                }
 
                                 presupuesto += totpagar;
                                 volVentas += totpagar;
@@ -207,6 +227,7 @@ public class Proyecto_Programacion_Caja{
                             System.out.println("\n*******ERROR, Primero debe abrir la caja.*******\n");
                             Thread.sleep(2000);
                         } else {
+                            
                             System.out.println("\n------------------------- COMPRAS ---------------------------");
                             System.out.println(String.format("%-25s kg %.2f", "Stock de Azucar:", stockAzucar));
                             System.out.println(String.format("%-25s kg %.2f", "Stock de Avena:", stockAvena));
@@ -319,9 +340,20 @@ public class Proyecto_Programacion_Caja{
                             System.out.println(String.format("%-30s Lps. %.2f", "Cantidad en la caja:", presupuesto));
                             System.out.println(String.format("%-30s", "Numero de Compras:", cantCompras));
                             System.out.println(String.format("%-30s", "Numero de Ventas:", cantVent));
-
-                            medioCompras = medioCompras / cantCompras;
-                            medioVentas = medioVentas / cantVent;
+                            
+                            
+                            if(cantCompras == 0){
+                                medioCompras = 0;
+                            }else{
+                                medioCompras = medioCompras / cantCompras;
+                            }
+                            if(cantVent == 0){
+                                medioVentas = 0;
+                            }else{
+                                medioVentas = medioVentas / cantVent;
+                            }
+                           
+                            
 
                             System.out.println(String.format("%-30s Lps. %.2f", "Valor Medio de Ventas:", medioVentas));
                             System.out.println(String.format("%-30s Lps. %.2f", "Valor Medio de Compras:", medioCompras));
@@ -333,6 +365,8 @@ public class Proyecto_Programacion_Caja{
                             } else if (volCompras > volVentas) {
                                 margenGan = volCompras - volVentas;
                                 System.out.println(String.format("%-30s Lps. %.2f", "Margen de Perdidas Neta:", margenGan));
+                            }else{
+                                System.out.println("No hay ganancia");
                             }
                             System.out.println(String.format("%-30s Lps. %.2f", "Volumen de Compras:", volCompras));
                             System.out.println(String.format("%-30s Lps. %.2f", "Volumen de Ventas:", volVentas));
@@ -417,6 +451,7 @@ public class Proyecto_Programacion_Caja{
                             cantCompras = 0;
 
                             cajaAbierta = false;
+                            cajaCerrada = true;
 
                         } else {
                             System.out.println(">>>ERROR, primero debe abrir caja.");
@@ -424,10 +459,10 @@ public class Proyecto_Programacion_Caja{
                         }
                         break;
                     case 6: //Salir del Sistema
-                        if(!cajaAbierta || !cajaCerrada){
-                            System.out.println("Para poder salir del sistema, debe cerrar caja o abrirla.");
-                        }else{
+                        if(cajaCerrada){
                              System.out.println("Fin del Programa, gracias por utilizarlo!");
+                        }else{
+                            System.out.println("\n>>>ERROR, debe cerrar caja primero");
                         }
                         break;
                     default:                       
