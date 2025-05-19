@@ -11,20 +11,18 @@ import java.util.InputMismatchException;
  *
  * @author Samuel Vasquez
  */
-public class Proyecto_Programacion_Caja {
+public class Proyecto_Programacion_Caja{
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Scanner entrada = new Scanner(System.in).useDelimiter("\n");
         int opcion = 0, tipoCliente, codigo_P, rep;
         int cantVent = 0, cantCompras = 0, permiso = 0;;
         double presupuesto = 0, caja;
         double precio = 0, subtotal = 0;
-        double cantAzucar = 0,  cantTrigo = 0,   cantMaiz = 0,    cantAvena = 0;
-        double stockAzucar = 0, stockTrigo = 0, stockMaiz= 0,   stockAvena = 0;
+        double cantAzucar = 0, cantTrigo = 0, cantMaiz = 0, cantAvena = 0;
+        double stockAzucar = 0, stockTrigo = 0, stockMaiz = 0, stockAvena = 0;
         double mayorGanancia = 0, volVentas = 0, volCompras = 0, mayorGasto = 0, medioCompras = 0, medioVentas = 0;
-        boolean cajaAbierta = false;
-     
-       
+        boolean cajaAbierta = false, cajaCerrada = false;
 
         while (opcion != 6) {
             System.out.println("\n======Bienvenido a Caja del Megasuper Sami's======");
@@ -44,6 +42,7 @@ public class Proyecto_Programacion_Caja {
                             cajaAbierta = true;
                         } else {
                             System.out.println("\n******Porfavor, solamente puede agregar numeros mayores a 0******\n");
+                            Thread.sleep(2000);
                         }
                         break;
                     case 2: //Venta
@@ -52,16 +51,19 @@ public class Proyecto_Programacion_Caja {
                         subtotal = 0;
                         rep = 1;
                         double kg = 0;
-                        if (presupuesto <= 0 || cajaAbierta == false) {
+                        if (cajaAbierta == false) {
                             System.out.println("\n>>>>ERROR, Primero debe abrir la caja!\n");
+                            Thread.sleep(2000);
                         } else if (stockAvena == 0 && stockTrigo == 0 && stockAzucar == 0 && stockMaiz == 0) {
                             System.out.println("\n>>>>ERROR, Nesecita por lo menos tener un producto en stock!\n");
+                            Thread.sleep(2000);
                         } else {
                             System.out.println("\n------------- VENTAS ------------");
                             System.out.print("Introduzca su tipo de cliente Segun el numero que lo representa ([1]Cliente A, [2]Cliente B, [3]Cliente C)");
                             tipoCliente = entrada.nextInt();
                             if (tipoCliente != 1 && tipoCliente != 2 && tipoCliente != 3) {
                                 System.out.println("\n>>>>ERROR, introduzca un codigo valido\n");
+                                Thread.sleep(2000);
                             }
                             do {
                                 permiso = 0;
@@ -95,7 +97,7 @@ public class Proyecto_Programacion_Caja {
                                         precio = 20;
                                         break;
                                     default:
-                                        System.out.println("Porfavor, introduzca un codigo valido");
+                                        System.out.println("\nPorfavor, introduzca un codigo valido");
                                         break;
                                 }
                                 if (permiso == 1) {
@@ -103,40 +105,68 @@ public class Proyecto_Programacion_Caja {
                                     System.out.print("Introduzca la cantidad que quiere en kg (kilogramos):");
                                     kg = entrada.nextDouble();
                                     double tot;
-                                if(kg > 0){
-                                    if (stockAzucar >= kg || stockAvena >= kg || stockTrigo >= kg || stockMaiz >= kg) {
-                                        tot = precio * kg;
-                                        subtotal += tot;
-                                        switch (codigo_P) {
-                                            case 1:
-                                                cantAzucar += kg;
-                                                stockAzucar -= kg;
-                                                break;
-                                            case 2:
-                                                cantAvena += kg;
-                                                stockAvena -= kg;
-                                                ;
-                                                break;
-                                            case 3:
-                                                cantTrigo += kg;
-                                                stockTrigo -= kg;
-                                                break;
-                                            case 4:
-                                                cantMaiz += kg;
-                                                stockMaiz -= kg;
-                                                break;
+
+                                    boolean suficiente = true;
+                                    switch (codigo_P) {
+                                        case 1:
+                                            if (kg > stockAzucar) {
+                                                suficiente = false;
+                                            }
+                                            break;
+                                        case 2:
+                                            if (kg > stockAvena) {
+                                                suficiente = false;
+                                            }
+                                            break;
+                                        case 3:
+                                            if (kg > stockTrigo) {
+                                                suficiente = false;
+                                            }
+                                            break;
+                                        case 4:
+                                            if (kg > stockMaiz) {
+                                                suficiente = false;
+                                            }
+                                            break;
+
+                                    }
+                                    if (kg > 0) {
+                                        if (suficiente) {
+                                            tot = precio * kg;
+                                            subtotal += tot;
+                                            switch (codigo_P) {
+                                                case 1:
+                                                    cantAzucar += kg;
+                                                    stockAzucar -= kg;
+                                                    break;
+                                                case 2:
+                                                    cantAvena += kg;
+                                                    stockAvena -= kg;
+                                                    break;
+                                                case 3:
+                                                    cantTrigo += kg;
+                                                    stockTrigo -= kg;
+                                                    break;
+                                                case 4:
+                                                    cantMaiz += kg;
+                                                    stockMaiz -= kg;
+                                                    break;
+
+                                            }
+                                            prodVen += ", " + nombre + " " + kg + "kg";
+                                        } else {
+                                            System.out.println("\n>>>ERROR, la cantidad solicitada del producto no esta disponible****\n");
+                                            Thread.sleep(2000);
                                         }
                                     } else {
-                                        System.out.println("\n>>>ERROR, la cantidad solicitada del producto no esta disponible****\n");
+                                        System.out.println("\n>>>ERROR, introduzca una cantidad valida");
+                                        Thread.sleep(2000);
                                     }
+                                    System.out.println("Desea agregar otro producto?\n0-No\n1-Si");
+                                    rep = entrada.nextInt();
                                 } else {
                                     System.out.println("\n>>>ERROR, no puede comprar este producto\n");
-                                }
-                                prodVen += ", " + nombre + " " + kg + "kg";
-                                System.out.println("Desea agregar otro producto?\n0-No\n1-Si");
-                                rep = entrada.nextInt();
-                                } else{
-                                    System.out.println("\n>>>ERROR, introduzca una cantidad valida");
+                                    Thread.sleep(2000);
                                 }
                             } while (rep == 1);
 
@@ -173,8 +203,9 @@ public class Proyecto_Programacion_Caja {
                         break;
                     case 3: //Compra
                         double kgProv = 0;
-                        if (presupuesto <= 0 || cajaAbierta == false) {
+                        if (cajaAbierta == false) {
                             System.out.println("\n*******ERROR, Primero debe abrir la caja.*******\n");
+                            Thread.sleep(2000);
                         } else {
                             System.out.println("\n------------------------- COMPRAS ---------------------------");
                             System.out.println(String.format("%-25s kg %.2f", "Stock de Azucar:", stockAzucar));
@@ -191,13 +222,13 @@ public class Proyecto_Programacion_Caja {
                                 codigo_P = entrada.nextInt();
                                 nombre = "";
                                 permiso = 0;
-                                switch (codigo_P) {
+                                switch (codigo_P) { // se crea un switch del codigo que introdujo el cliente para dar permiso de vender para cada proveedor
                                     case 1:
                                         if (prov == 1) {
                                             permiso = 1;
                                         }
                                         nombre = "Azucar";
-                                        precio = 30;
+                                        precio = 25;
                                         break;
                                     case 2:
                                         if (prov == 2 || prov == 3) {
@@ -207,7 +238,7 @@ public class Proyecto_Programacion_Caja {
                                         if (prov == 2) {
                                             precio = 20;
                                         } else {
-                                            precio = 25;
+                                            precio = 22;
                                         }
                                         break;
                                     case 3:
@@ -215,74 +246,75 @@ public class Proyecto_Programacion_Caja {
                                             permiso = 1;
                                         }
                                         nombre = "Trigo";
-                                        precio = 32;
+                                        precio = 30;
                                         break;
                                     case 4:
                                         if (prov == 1) {
                                             permiso = 1;
                                         }
                                         nombre = "Maiz";
-                                        precio = 20;
+                                        precio = 18;
                                         break;
                                     default:
                                         System.out.println("Porfavor, introduzca un codigo valido");
                                         break;
                                 }
-                                if (permiso == 1) 
+                                if (permiso == 1) // Se revisa que el producto tenga permiso para ser vendido
                                 {
                                     System.out.print("Introduzca cuanto quiere comprar del producto (en kilogramos):");
-                                    kgProv = entrada.nextInt();
+                                    kgProv = entrada.nextDouble();
                                     subtotal = precio * kgProv;
-                                if(kgProv > 0)
-                                {
-                                    if (presupuesto >= subtotal) {
-                                        cantCompras++;
-                                        double total = presupuesto - subtotal;
-                                        switch (codigo_P) {
-                                            case 1:
-                                                stockAzucar += kgProv;
-                                                break;
-                                            case 2:
-                                                stockAvena += kgProv;
-                                                break;
-                                            case 3:
-                                                stockTrigo += kgProv;
-                                                break;
-                                            case 4:
-                                                stockMaiz += kgProv;
-                                                break;
-                                        }
-                                        System.out.println("******Factura de Compra*****");
-                                        System.out.println("Producto Comprado: " + nombre);
-                                        System.out.println("Cantidad Comprada: " + kgProv + "kg");
-                                        System.out.println("Total a pagar: " + subtotal);
-                                        System.out.println("Presupuesto: " + presupuesto);
+                                    if (kgProv > 0) {
+                                        if (presupuesto >= subtotal) {
+                                            cantCompras++;
+                                            double total = presupuesto - subtotal;
+                                            switch (codigo_P) {
+                                                case 1:
+                                                    stockAzucar += kgProv;
+                                                    break;
+                                                case 2:
+                                                    stockAvena += kgProv;
+                                                    break;
+                                                case 3:
+                                                    stockTrigo += kgProv;
+                                                    break;
+                                                case 4:
+                                                    stockMaiz += kgProv;
+                                                    break;
+                                            }
+                                            System.out.println("\n******Factura de Compra*****");
+                                            System.out.println("Producto Comprado: " + nombre);
+                                            System.out.println("Cantidad Comprada: " + kgProv + "kg");
+                                            System.out.println("Total a pagar: " + subtotal);
+                                            System.out.println("Presupuesto: " + presupuesto);
 
-                                        presupuesto -= subtotal;
-                                        volCompras += subtotal;
-                                        medioCompras += subtotal;
-                                        System.out.println("Presupuesto final: " + presupuesto);
+                                            presupuesto -= subtotal;
+                                            volCompras += subtotal;
+                                            medioCompras += subtotal;
+                                            System.out.println("Presupuesto final: " + presupuesto);
+                                            System.out.println("**************************");
 
-                                        if (subtotal > mayorGasto) {
-                                            mayorGasto = subtotal;
+                                            if (subtotal > mayorGasto) {
+                                                mayorGasto = subtotal;
+                                            }
+                                        } else {
+                                            System.out.println("No se puede comprar");
+                                            Thread.sleep(2000);
+                                            break;
                                         }
                                     } else {
-                                        System.out.println("No se puede comprar");
-                                        break;
+                                        System.out.println("\n>>>>ERROR, introduzca una cantidad valida");
+                                        Thread.sleep(2000);
                                     }
-                                }
-                                else {
-                                    System.out.println("\n>>>>ERROR, introduzca una cantidad valida");
-                                }
-                                }
-                                else{
-                                    System.out.println(">>>>ERROR, Proveedor no cuenta con dicho producto");
+                                } else {
+                                    System.out.println("\n>>>>ERROR, Proveedor no cuenta con dicho producto");
+                                    Thread.sleep(2000);
                                 }
                             }
                         }
                         break;
                     case 4: //Reportes
-                        if (presupuesto > 0 && cajaAbierta == true) {
+                        if (cajaAbierta == true) {
                             System.out.println("\n----------------------- REPORTES -----------------------");
                             System.out.println(String.format("%-30s Lps. %.2f", "Cantidad en la caja:", presupuesto));
                             System.out.println(String.format("%-30s", "Numero de Compras:", cantCompras));
@@ -294,8 +326,14 @@ public class Proyecto_Programacion_Caja {
                             System.out.println(String.format("%-30s Lps. %.2f", "Valor Medio de Ventas:", medioVentas));
                             System.out.println(String.format("%-30s Lps. %.2f", "Valor Medio de Compras:", medioCompras));
 
-                            double margenGan = volVentas - volCompras;
-                            System.out.println(String.format("%-30s Lps. %.2f", "Margen de Ganancia Neta:", margenGan));
+                            double margenGan;
+                            if (volVentas > volCompras) {
+                                margenGan = volVentas - volCompras;
+                                System.out.println(String.format("%-30s Lps. %.2f", "Margen de Ganancia Neta:", margenGan));
+                            } else if (volCompras > volVentas) {
+                                margenGan = volCompras - volVentas;
+                                System.out.println(String.format("%-30s Lps. %.2f", "Margen de Perdidas Neta:", margenGan));
+                            }
                             System.out.println(String.format("%-30s Lps. %.2f", "Volumen de Compras:", volCompras));
                             System.out.println(String.format("%-30s Lps. %.2f", "Volumen de Ventas:", volVentas));
 
@@ -316,7 +354,7 @@ public class Proyecto_Programacion_Caja {
                             if (cantMaiz > mayorCant) {
                                 mayorCant = cantMaiz;
                             }
-
+                            // Se crea un string que almacene los productos estrella, de manera de que puedan ser mas de uno
                             String productosEstrella = "";
                             if (cantAzucar == mayorCant && mayorCant > 0) {
                                 productosEstrella += "Azucar, ";
@@ -339,48 +377,67 @@ public class Proyecto_Programacion_Caja {
                             }
                         } else {
                             System.out.println("\n>>> ERROR, pimero debe de abrir caja primero");
+                            Thread.sleep(2000);
                         }
                         break;
                     case 5: //Cierrie de CAJA
-                        if(cajaAbierta == true || presupuesto > 0){
+                        if (cajaAbierta == true) { // Revisa si la caja ha sido abierta y si hay presupuesto para guardar
                             System.out.println("\n---------------- CIERRE DE CAJA -----------------");
                             System.out.println(String.format("%-30s Lps. %.2f", "Cantidad en la caja:", presupuesto));
-                            
+
                             double margenGan = volVentas - volCompras;
                             System.out.println(String.format("%-30s Lps. %.2f", "Margen de Ganancia Neta:", margenGan));
-                            
+                            System.out.println("-------------------------------------------------");
+
                             System.out.print("Ingrese el dinnero que quiere dejar en el banco: ");
                             double cantGuard = entrada.nextDouble();
-                            if(cantGuard <= presupuesto*0.6){
-                                presupuesto -= cantGuard;
+                            if (cantGuard <= presupuesto * 0.6) { // Se usa la condicion if para verificar que lo que quiera guardar el usuario solo pueda ser maximo el 60%
+                                presupuesto -= cantGuard; // Se hace la resta de lo que se va a guardar
                                 System.out.println("Se han guardado " + cantGuard + "Lps. Con exito");
                                 System.out.println("Ahora queda " + presupuesto + " Para el dia siguiente");
-                            }else if(cantGuard < 0){
+                            } else if (cantGuard < 0) {
                                 System.out.println("\n>>>ERROR, solo puede ingresar cantidades psoitivas.");
-                            }else{
+                                Thread.sleep(2000);
+                            } else {
                                 System.out.println("\n>>>Error, solo puede guardar maximo el 60% de lo que hay en caja.");
+                                Thread.sleep(2000);
                             }
-                            
-                            cantAzucar = 0; cantTrigo = 0;   cantMaiz = 0;    cantAvena = 0;
-                            mayorGanancia = 0; volVentas = 0; volCompras = 0; mayorGasto = 0; medioCompras = 0; medioVentas = 0;
-                            cantVent = 0; cantCompras = 0;
-                            
+                            // Se renician todas las variables que se usan solamente a diario
+                            cantAzucar = 0;
+                            cantTrigo = 0;
+                            cantMaiz = 0;
+                            cantAvena = 0;
+                            mayorGanancia = 0;
+                            volVentas = 0;
+                            volCompras = 0;
+                            mayorGasto = 0;
+                            medioCompras = 0;
+                            medioVentas = 0;
+                            cantVent = 0;
+                            cantCompras = 0;
+
                             cajaAbierta = false;
-                       
-                        }
-                        else{
+
+                        } else {
                             System.out.println(">>>ERROR, primero debe abrir caja.");
+                            Thread.sleep(2000);
                         }
                         break;
                     case 6: //Salir del Sistema
-                        System.out.println("Fin del Programa, gracias por utilizarlo!");
+                        if(!cajaAbierta || !cajaCerrada){
+                            System.out.println("Para poder salir del sistema, debe cerrar caja o abrirla.");
+                        }else{
+                             System.out.println("Fin del Programa, gracias por utilizarlo!");
+                        }
                         break;
-                    default:
-                        System.out.println("****OPCION INVALIDA*****");
+                    default:                       
+                        System.out.println("\n****OPCION INVALIDA*****");
+                        Thread.sleep(2000);
                         break;
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("PORFAVOR, Introduzca solamente numeros enteros.");
+            } catch (InputMismatchException e) { // Con tel catch inputmismatch exception se evita que el programa se crashee por usar numeros no permitidos
+                System.out.println("\n>>>PORFAVOR, Introduzca solamente numeros enteros.");
+                Thread.sleep(2000);
                 entrada.nextLine();
 
             }
