@@ -34,10 +34,10 @@ public class Proyecto_Programacion_Caja{
                 switch (opcion) {
                     case 1: //Caja
                         System.out.println("\n--------- ABRIR CAJA ---------");
-                        if(cajaCerrada && cajaAbierta == false){
+                        if(cajaCerrada && cajaAbierta == false){ // Se comprueba si es primera vez que abre caja
                             System.out.println("Caja abierta con: Lps. " + String.format("%.2f", presupuesto));
                             cajaAbierta = true;
-                        }else if (cajaCerrada && cajaAbierta == true)
+                        }else if (cajaCerrada && cajaAbierta == true)// Si es asi se tiene que introducir una cantidad
                         {
                             System.out.print("Introduzca la cantidad que quiere almacenar en caja: ");
                             caja = entrada.nextDouble();
@@ -49,7 +49,7 @@ public class Proyecto_Programacion_Caja{
                             System.out.println("\n******Porfavor, solamente puede agregar numeros mayores a 0******\n");
                             Thread.sleep(2000);
                          }
-                        }else if (!cajaCerrada && cajaAbierta == false){
+                        }else if (!cajaCerrada && cajaAbierta == false){ // Si es el segundo dia y ya abrio caja, si vuelve a entrar tendra la opcion de introducir mas dinero
                             System.out.print("Introduzca la cantidad que quiere almacenar en caja: ");
                             caja = entrada.nextDouble();
                          if (caja >= 0) 
@@ -69,23 +69,35 @@ public class Proyecto_Programacion_Caja{
                         subtotal = 0;
                         rep = 1;
                         double kg = 0;
-                        if (cajaAbierta == false) {
+                        if (cajaAbierta == false) { // Se comprueba si la caja esta abierta
                             System.out.println("\n>>>>ERROR, Primero debe abrir la caja!\n");
                             Thread.sleep(2000);
-                        } else if (stockAvena == 0 && stockTrigo == 0 && stockAzucar == 0 && stockMaiz == 0) {
+                        } else if (stockAvena == 0 && stockTrigo == 0 && stockAzucar == 0 && stockMaiz == 0) { // Luego si hay stock de cualquier producto disponible para vender
                             System.out.println("\n>>>>ERROR, Nesecita por lo menos tener un producto en stock!\n");
                             Thread.sleep(2000);
                         } else {
                             System.out.println("\n------------- VENTAS ------------");
-                            System.out.print("Introduzca su tipo de cliente Segun el numero que lo representa ([1]Cliente A, [2]Cliente B, [3]Cliente C)");
+                            System.out.println("     ****  TIPOS DE CLIENTE ***    ");
+                            System.out.println("[1] Cliente A");
+                            System.out.println("[2] Cliente B");
+                            System.out.println("[3] Cliente C");
+                            System.out.println("---------------------------------");
+                            System.out.print("Introduzca su tipo de cliente Segun el numero que lo representa: ");
                             tipoCliente = entrada.nextInt();
-                            if (tipoCliente != 1 && tipoCliente != 2 && tipoCliente != 3) {
+                            
+                            if (tipoCliente != 1 && tipoCliente != 2 && tipoCliente != 3) { // Se comprueba si el tipo de cliente es valido
                                 System.out.println("\n>>>>ERROR, introduzca un codigo valido\n");
                                 Thread.sleep(2000);
                             }
                             do {
                                 permiso = 0;
-                                System.out.print("Introduzca el codigo del producto ([1]Azucar, [2]Avena, [3]Trigo, [4]Maiz): ");
+                                System.out.println("**** PRODUCTOS DISPONIBLES ****");
+                                System.out.println("[1] Azucar");
+                                System.out.println("[2] Avena");
+                                System.out.println("[3] Trigo");
+                                System.out.println("[4] Maiz");
+                                System.out.println("*******************************");
+                                System.out.print("Introduzca el codigo del producto: ");
                                 codigo_P = entrada.nextInt();
                                 switch (codigo_P) {
                                     case 1:
@@ -229,17 +241,23 @@ public class Proyecto_Programacion_Caja{
                         } else {
                             
                             System.out.println("\n------------------------- COMPRAS ---------------------------");
-                            System.out.println(String.format("%-25s kg %.2f", "Stock de Azucar:", stockAzucar));
-                            System.out.println(String.format("%-25s kg %.2f", "Stock de Avena:", stockAvena));
-                            System.out.println(String.format("%-25s kg %.2f", "Stock de Trigo:", stockTrigo));
-                            System.out.println(String.format("%-25s kg %.2f", "Stock de Maiz:", stockMaiz));
+                            System.out.println("                 ****  TIPOS DE PROVEEDOR ****   ");
+                            System.out.println("[1] Proveedor A");
+                            System.out.println("[2] Proveedor B");
+                            System.out.println("[3] Proveedor C");
                             System.out.println("-------------------------------------------------------------");
-                            System.out.print("Porfavor, seleccione un proveedor introduciendo el numero que lo representa [1]A, [2]B, [3]C): ");
+                            System.out.print("Porfavor, seleccione un proveedor introduciendo el numero que lo representa: ");
                             int prov = entrada.nextInt();
-                            if (prov != 1 && prov != 2 && prov != 3) {
+                            if (prov != 1 && prov != 2 && prov != 3) { // Se comprueba que sea vlaido el coduigo del proveedor
                                 System.out.println("\n*****ERROR, introduzca un codigo valido*****\n");
                             } else {
-                                System.out.print("Introduzca el codigo del producto ([1]Azucar, [2]Avena, [3]Trigo, [4]Maiz): ");
+                                System.out.println("\n----------------- CODIGO Y STOCK DE PRODUCTOS --------------------");
+                                System.out.println(String.format("%-25s kg %.2f", "[1] Azucar:", stockAzucar));
+                                System.out.println(String.format("%-25s kg %.2f", "[2] Avena:", stockAvena));
+                                System.out.println(String.format("%-25s kg %.2f", "[3] Trigo:", stockTrigo));
+                                System.out.println(String.format("%-25s kg %.2f", "[4] Maiz:", stockMaiz));
+                                System.out.println("-------------------------------------------------------------");
+                                System.out.print("Introduzca el codigo del producto: ");
                                 codigo_P = entrada.nextInt();
                                 nombre = "";
                                 permiso = 0;
@@ -282,10 +300,11 @@ public class Proyecto_Programacion_Caja{
                                 }
                                 if (permiso == 1) // Se revisa que el producto tenga permiso para ser vendido
                                 {
+                                    System.out.println("Costo por kilo de " + nombre + " " + precio + "Lps.");
                                     System.out.print("Introduzca cuanto quiere comprar del producto (en kilogramos):");
                                     kgProv = entrada.nextDouble();
                                     subtotal = precio * kgProv;
-                                    if (kgProv > 0) {
+                                    if (kgProv > 0) { // Si los kilogramos son validos se realiza la compra y luego la facturacion
                                         if (presupuesto >= subtotal) {
                                             cantCompras++;
                                             double total = presupuesto - subtotal;
@@ -418,9 +437,17 @@ public class Proyecto_Programacion_Caja{
                         if (cajaAbierta == true) { // Revisa si la caja ha sido abierta y si hay presupuesto para guardar
                             System.out.println("\n---------------- CIERRE DE CAJA -----------------");
                             System.out.println(String.format("%-30s Lps. %.2f", "Cantidad en la caja:", presupuesto));
-
-                            double margenGan = volVentas - volCompras;
-                            System.out.println(String.format("%-30s Lps. %.2f", "Margen de Ganancia Neta:", margenGan));
+                            
+                             double margenGan;
+                            if (volVentas > volCompras) {
+                                margenGan = volVentas - volCompras;
+                                System.out.println(String.format("%-30s Lps. %.2f", "Margen de Ganancia Neta:", margenGan));
+                            } else if (volCompras > volVentas) {
+                                margenGan = volCompras - volVentas;
+                                System.out.println(String.format("%-30s Lps. %.2f", "Margen de Perdidas Neta:", margenGan));
+                            }else{
+                                System.out.println("No hay ganancia");
+                            }
                             System.out.println("-------------------------------------------------");
 
                             System.out.print("Ingrese el dinnero que quiere dejar en el banco: ");
